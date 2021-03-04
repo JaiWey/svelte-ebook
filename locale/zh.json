@@ -1,0 +1,20 @@
+{
+  "book": {
+    "time": "阅读 {minutes} 分钟",
+    "Default": "默认",
+    "Gold": "雅致",
+    "Eye": "护眼",
+    "Night": "夜间",
+    "chooseFont": "选择字体",
+    "content": "目录",
+    "bookmark": "书签",
+    "cancelSearch": "取消",
+    "searchHint": "搜索",
+    "haveRead": "{percentage}%已读",
+    "haveReadTime": "已读{minutes}分钟",
+    "pullAddBookmark": "下拉添加书签",
+    "releaseAddBookmark": "释放添加书签",
+    "pullDeleteBookmark": "下拉删除书签",
+    "releaseDeleteBookmark": "释放删除书签"
+  }
+}

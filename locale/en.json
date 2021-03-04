@@ -1,0 +1,20 @@
+{
+  "book": {
+    "time": "reading {minutes} minutes",
+    "Default": "Default",
+    "Gold": "Grace",
+    "Eye": "Eye",
+    "Night": "Night",
+    "chooseFont": "Choose Font",
+    "content": "Content",
+    "bookmark": "Bookmark",
+    "cancelSearch": "Cancel",
+    "searchHint": "Type to search",
+    "haveRead": "already read {percentage}%",
+    "haveReadTime": "read {minutes} minutes",
+    "pullAddBookmark": "pull down to add bookmark",
+    "releaseAddBookmark": "release to add bookmark",
+    "pullDeleteBookmark": "pull down to delete bookmark",
+    "releaseDeleteBookmark": "release to delete bookmark"
+  }
+}
