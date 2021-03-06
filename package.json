@@ -31,7 +31,9 @@
     "tailwindcss": "1.9.6"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "epubjs": "0.3.71",
+    "qs": "^6.9.6",
     "sirv-cli": "^1.0.11"
   },
   "lint-staged": {
