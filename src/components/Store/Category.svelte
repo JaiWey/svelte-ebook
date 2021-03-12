@@ -1,12 +1,17 @@
 <script>
   import { _ } from "svelte-i18n";
-  import { categoryText } from "../../utils/constants";
+  import { push } from "svelte-spa-router";
+  import { categoryText, getCategoryName } from "../../utils/constants";
   export let categories;
 </script>
 
 <div class="category-list">
   {#each categories as category (category.category)}
-    <div class="category">
+    <div
+      class="category"
+      on:click={() =>
+        push(`/store/list?category=${getCategoryName(category.category)}`)}
+    >
       <div class="inner-wrapper">
         <div class="left">
           <div class="category-title">

@@ -1,10 +1,9 @@
 <script>
-  import Router from "svelte-spa-router";
-  import routes from "./routes";
+  import Router from "./Router.svelte";
 </script>
 
 <div class="root">
-  <Router {routes} />
+  <Router />
 </div>
 
 <style type="postcss">

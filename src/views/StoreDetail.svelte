@@ -1,13 +1,20 @@
 <script>
   import { onMount } from "svelte";
   import qs from "qs";
-
   import { _ } from "svelte-i18n";
   import Epub from "epubjs";
   import { pop, push, querystring } from "svelte-spa-router";
   import Scroll from "../components/common/Scroll.svelte";
   import { detail } from "../api/book";
+  import {
+    addShelfBook,
+    initShelfBook,
+    removeShelfBook,
+    shelfBook,
+  } from "../stores/shelf";
 
+  let opf;
+  let fileName;
   let book;
   let rendition;
   let categoryText;
@@ -18,18 +25,22 @@
 
   $: flatNavigation =
     navigation && navigation.length > 0 ? flat(navigation.toc) : [];
-  $: console.log(flatNavigation);
 
   $: lang = metadata ? metadata.language : "-";
   $: isbn = metadata ? metadata.identifier : "-";
   $: publisher = metadata ? metadata.publisher : "-";
   $: title = metadata ? metadata.title : "";
   $: author = metadata ? metadata.creator : "";
+  $: isInShelf = $shelfBook
+    .map((b) => (b.type === 1 ? b.data : b.bookList.map((b) => b.data)))
+    .flat()
+    .some((b) => b.fileName === fileName);
 
   onMount(() => {
+    initShelfBook();
     const parsed = qs.parse($querystring);
 
-    const fileName = parsed.fileName;
+    fileName = parsed.fileName;
     categoryText = parsed.category;
     if (fileName) {
       detail({
@@ -48,14 +59,12 @@
             rootFile = rootFile.substring(1, rootFile.length);
           }
           const url = "VUE_APP_EPUB_OPF_URL";
-          const opf = `${url}/${fileName}/${rootFile}`;
+          opf = `${url}/${fileName}/${rootFile}`;
           parseBook(opf);
         } else {
-          // this.showToast(response.data.msg)
         }
       });
     }
-    //this.bookShelf = getLocalStorage('bookShelf')
   });
 
   function parseBook(blob) {
@@ -108,15 +117,25 @@
     });
     return arr;
   }
+
+  function fadeTransition(node, { duration }) {
+    return {
+      duration,
+      css: (t) => `
+					  transform: translateX(${100 * (1 - t)}%);
+            opacity: ${t};
+					`,
+    };
+  }
 </script>
 
-<div>
+<div transition:fadeTransition={{ duration: 500 }}>
   <div class="header-wrapper">
     <div class="icon-wrapper left">
       <span class="icon-back" on:click={pop} />
     </div>
     <div class="icon-wrapper right">
-      <span class="icon-shake" />
+      <span class="icon-shelf" on:click={() => push("/store/shelf")} />
     </div>
   </div>
   <Scroll top={2} bottom={3}>
@@ -178,10 +197,28 @@
     </div>
   </Scroll>
   <div class="bottom-wrapper">
-    <div class="bottom-btn">{$_("detail.read")}</div>
-    <div class="bottom-btn">
-      {$_("detail.isAddedToShelf")}
+    <div class="bottom-btn" on:click={push(`/ebook/${fileName}?opf=${opf}`)}>
+      {$_("detail.read")}
     </div>
+    {#if isInShelf}
+      <div class="bottom-btn" on:click={() => removeShelfBook(title)}>
+        {$_("detail.isAddedToShelf")}
+      </div>
+    {:else}
+      <div
+        class="bottom-btn"
+        on:click={() =>
+          addShelfBook({
+            cover,
+            title,
+            opf,
+            fileName,
+            categoryText,
+          })}
+      >
+        {$_("detail.addOrRemoveShelf")}
+      </div>
+    {/if}
   </div>
 </div>
 

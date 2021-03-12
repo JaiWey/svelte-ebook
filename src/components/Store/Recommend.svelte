@@ -44,7 +44,9 @@
   .recommend-list {
     @apply flex;
     & .recommend-book {
-      @apply flex-1 m-2;
+      @apply m-2;
+      flex: 0 0 30%;
+      width: 30%;
       & img {
         max-width: 100%;
       }

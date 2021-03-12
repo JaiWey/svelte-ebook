@@ -1,25 +1,65 @@
 <script>
+  import { onMount } from "svelte";
+
   import { _ } from "svelte-i18n";
-  import { pop, push } from "svelte-spa-router";
+  import { push } from "svelte-spa-router";
+  import { fade } from "svelte/transition";
+  import {
+    getStorageSearchHistory,
+    setStorageSearchHistory,
+  } from "../../utils/storage";
   export let isCompress;
-  export let isSearching = false;
+  let isSearching = false;
 
   let searchWrapper;
   let searchInput;
+  let searchHistory;
 
   $: compress = isCompress || isSearching;
 
+  onMount(() => {
+    searchHistory = getStorageSearchHistory();
+    console.log(searchHistory);
+  });
+
+  function back() {
+    if (isSearching) {
+      isSearching = false;
+    } else {
+      push("/store/shelf");
+    }
+  }
+
   function enterSearch(e) {
     if (e.key === "Enter" && searchInput.length > 0) {
-      push("/store/list?search=" + searchInput);
+      search(searchInput);
+    }
+  }
+
+  function search(s) {
+    if (searchHistory) {
+      const result = searchHistory
+        .filter((h) => h !== s)
+        .concat(s)
+        .reverse()
+        .slice(0, 10);
+      setStorageSearchHistory(result);
+    }
+    push("/store/list?keyword=" + s);
+  }
+
+  function deleteHistory() {
+    if (searchHistory) {
+      const result = searchHistory.filter((h) => h !== s);
+      setStorageSearchHistory(result);
     }
   }
 </script>
 
-<div class="search-bar" class:compress={isCompress}>
+<div class="search-bar" class:compress>
   <div class="header-wrapper">
     <div class="icon-wrapper left">
-      <span class="icon-back" on:click={pop} />
+      <span class="icon-back" on:click={back} />
     </div>
     <div class="header-title">
       {$_("home.title")}
@@ -28,11 +68,7 @@
       <span class="icon-shake" />
     </div>
   </div>
-  <div
-    class="search-wrapper"
-    bind:this={searchWrapper}
-    class:compress={isCompress}
-  >
+  <div class="search-wrapper" bind:this={searchWrapper} class:compress>
     <div class="inner">
       <div class="search-icon-wrapper">
         <span class="icon-search" />
@@ -47,6 +83,24 @@
       </div>
     </div>
   </div>
+  {#if isSearching}
+    <div transition:fade class="search-content">
+      {#if searchHistory}
+        {#if searchHistory.length > 0}
+          {#each searchHistory as history}
+            <div class="history-item-wrapper">
+              <div class="history" on:click={() => search(history)}>
+                {history}
+              </div>
+              <div on:click={() => deleteHistory(history)}>✖</div>
+            </div>
+          {/each}
+        {:else}
+          <div>{$_("home.noHistory")}</div>
+        {/if}
+      {/if}
+    </div>
+  {/if}
 </div>
 
 <style type="postcss">
@@ -80,6 +134,7 @@
       left: 0.5rem;
     }
     &.right {
+      display: none;
       right: 0.5rem;
       transition: opacity 0.5s linear;
     }
@@ -109,6 +164,22 @@
     &.compress {
       top: 0;
       left: 1.5rem;
+    }
+  }
+
+  .search-content {
+    @apply fixed w-full;
+    top: 2rem;
+    bottom: 0;
+    background: white;
+
+    & .history-item-wrapper {
+      @apply flex items-center justify-center mx-4;
+      border-bottom: 1px solid rgba(20, 20, 20, 0.3);
+      & > .history {
+        @apply truncate text-xl;
+        width: 85%;
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 <script>
   import { onMount, onDestroy } from "svelte";
   import Epub from "epubjs";
+  import qs from "qs";
   import {
     showMenu,
     ebook,
@@ -33,6 +34,7 @@
   import EbookMenu from "./EbookMenu.svelte";
   import { get } from "svelte/store";
   import EbookBookmark from "./EbookBookmark.svelte";
+  import { querystring } from "svelte-spa-router";
 
   export let params = {};
   const threshold = rem2px(2.5);
@@ -49,7 +51,9 @@
   onDestroy(() => interval && clearInterval(interval));
 
   onMount(() => {
-    initEpub(params.filename);
+    const parsed = qs.parse($querystring);
+    const opf = parsed.opf;
+    initEpub(opf);
     parseBook();
     interval = setInterval(() => {
       const m = $minutes;
@@ -60,9 +64,7 @@
 
   function initEpub(target) {
     ebookName.set(target);
-    _ebook = new Epub(
-      `http://39.105.114.92:8081/resource/book/politics/LeCalifat/content.opf`
-    );
+    _ebook = new Epub(target);
     ebook.set(_ebook);
     initRendition(target);
     minutes.set(getStorageMinutes(target));

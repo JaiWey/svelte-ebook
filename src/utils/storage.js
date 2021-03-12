@@ -16,6 +16,11 @@ export function getStorage(key, defaultValue = {}) {
   return result;
 }
 
+export function setStorage(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+  return value;
+}
+
 export function getStorageValue(key, valueKey, defaultValue) {
   const v = localStorage.getItem(key);
   let result;
@@ -104,4 +109,27 @@ export function getStorageBookmark(bookName) {
 
 export function setStorageBookmark(bookName, bookmark) {
   return setStorageValue(bookName, "bookmark", bookmark);
+}
+
+export function getStorageSearchHistory() {
+  return getStorage("searchHistory", []);
+}
+
+export function setStorageSearchHistory(history) {
+  return setStorage("searchHistory", history);
+}
+
+export function getStorageShelf() {
+  return getStorage("shelf", []);
+}
+
+export function setStorageShelf(shelf) {
+  return setStorage("shelf", shelf);
+}
+export function getStorageLocale() {
+  return localStorage.getItem("ebookLocale");
+}
+
+export function setStorageLocale(locale) {
+  return localStorage.getItem("ebookLocale", locale);
 }
