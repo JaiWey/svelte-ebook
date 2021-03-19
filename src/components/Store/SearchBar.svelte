@@ -1,6 +1,5 @@
 <script>
   import { onMount } from "svelte";
-
   import { _ } from "svelte-i18n";
   import { push } from "svelte-spa-router";
   import { fade } from "svelte/transition";
@@ -19,7 +18,6 @@
 
   onMount(() => {
     searchHistory = getStorageSearchHistory();
-    console.log(searchHistory);
   });
 
   function back() {
@@ -87,6 +85,7 @@
     <div transition:fade class="search-content">
       {#if searchHistory}
         {#if searchHistory.length > 0}
+          <div class="search-title">{$_("home.searchHistory")}</div>
           {#each searchHistory as history}
             <div class="history-item-wrapper">
               <div class="history" on:click={() => search(history)}>
@@ -96,7 +95,7 @@
             </div>
           {/each}
         {:else}
-          <div>{$_("home.noHistory")}</div>
+          <div class="search-title">{$_("home.noHistory")}</div>
         {/if}
       {/if}
     </div>
@@ -172,6 +171,10 @@
     top: 2rem;
     bottom: 0;
     background: white;
+
+    & .search-title {
+      margin: 12px 18px;
+    }
 
     & .history-item-wrapper {
       @apply flex items-center justify-center mx-4;

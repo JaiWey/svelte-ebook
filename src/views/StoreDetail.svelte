@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
   import qs from "qs";
   import { _ } from "svelte-i18n";
   import Epub from "epubjs";
@@ -58,7 +59,7 @@
           if (rootFile.startsWith("/")) {
             rootFile = rootFile.substring(1, rootFile.length);
           }
-          const url = "VUE_APP_EPUB_OPF_URL";
+          const url = "APP_EPUB_OPF_URL";
           opf = `${url}/${fileName}/${rootFile}`;
           parseBook(opf);
         } else {
@@ -117,19 +118,9 @@
     });
     return arr;
   }
-
-  function fadeTransition(node, { duration }) {
-    return {
-      duration,
-      css: (t) => `
-					  transform: translateX(${100 * (1 - t)}%);
-            opacity: ${t};
-					`,
-    };
-  }
 </script>
 
-<div transition:fadeTransition={{ duration: 500 }}>
+<div transition:fade>
   <div class="header-wrapper">
     <div class="icon-wrapper left">
       <span class="icon-back" on:click={pop} />

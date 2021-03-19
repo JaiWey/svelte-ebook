@@ -146,7 +146,10 @@
     {isEdit}
     {selectedBook}
     isCategory={true}
-    on:toggle={() => (isEdit = !isEdit)}
+    on:toggle={() => {
+      isEdit = !isEdit;
+      isEditGroup = false;
+    }}
     on:editGroup={() => (isEditGroup = true)}
   />
   <Scroll top={2} bottom={isEdit ? 2.5 : 0}>
@@ -164,9 +167,6 @@
   {/if}
   {#if isEditGroup}
     <div transition:slide class="edit-popup">
-      <div class="tab" on:click={() => (isModifyName = true)}>
-        {$_("shelf.editGroupName")}
-      </div>
       <div class="tab" on:click={deleteGroup}>{$_("shelf.deleteGroup")}</div>
       <div class="tab" on:click={() => (isEditGroup = false)}>
         {$_("shelf.cancel")}

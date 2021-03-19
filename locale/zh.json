@@ -29,7 +29,8 @@
     "readStat": "{readers}人已读",
     "title": "书城",
     "books": "{num}本书",
-    "noHistory": "搜索历史为空"
+    "noHistory": "搜索历史为空",
+    "searchHistory": "搜索历史"
   },
   "category": {
     "computerScience": "计算机科学",

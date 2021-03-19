@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import { download } from "../api/book";
   import Scroll from "../components/common/Scroll.svelte";
   import ShelfFooter from "../components/Shelf/ShelfFooter.svelte";
   import ShelfList from "../components/Shelf/ShelfList.svelte";
@@ -33,7 +34,7 @@
   function selected(event) {
     const { isSelected, title } = event.detail;
     if (isSelected) {
-      selectedBook = [...selectedBook, title];
+      selectedBook.push(title);
     } else {
       selectedBook = selectedBook.filter((b) => b === title);
     }
@@ -107,6 +108,28 @@
     selectedBook = [];
     isEdit = false;
   }
+
+  function onDownload() {
+    const resultBook = $shelfBook.filter(
+      (b) => b.type === 1 && selectedBook.indexOf(b.data.title) >= 0
+    );
+    for (const book of resultBook) {
+      download(
+        book,
+        (book) => {
+          console.log("[" + book.data.fileName + "]下载成功...");
+        },
+        (e) => console.log(e),
+        (e) => console.log(e),
+        (progressEvent) => {
+          const progress =
+            Math.floor((progressEvent.loaded / progressEvent.total) * 100) +
+            "%";
+          console.log(progress);
+        }
+      );
+    }
+  }
 </script>
 
 <div>
@@ -121,6 +144,7 @@
       on:addToGroup={addToGroup}
       on:createNewGroup={createNewGroup}
       on:remove={deleteBook}
+      on:download={onDownload}
     />
   {/if}
 </div>

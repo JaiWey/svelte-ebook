@@ -29,7 +29,8 @@
     "readStat": "{readers} is reading",
     "title": "Book Store",
     "books": "{num} books",
-    "noHistory": "No search history"
+    "noHistory": "No search history",
+    "searchHistory": "search history"
   },
   "category": {
     "computerScience": "Computer Science",

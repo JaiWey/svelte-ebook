@@ -29,7 +29,7 @@ export function detail(book) {
 export function download(item, onSuccess, onFailed, onError, onProgress) {
   axios
     .create({
-      baseURL: process.env.VUE_APP_EPUB_URL,
+      baseURL: "APP_EPUB_URL",
       method: "get",
       responseType: "blob",
       timeout: 180 * 1000,
@@ -37,11 +37,11 @@ export function download(item, onSuccess, onFailed, onError, onProgress) {
         if (onProgress) onProgress(progressEvent);
       },
     })
-    .get(`${getCategoryName(item.category)}/${item.fileName}.epub`)
+    .get(`${item.data.categoryText}/${item.data.fileName}.epub`)
     .then((res) => {
       const blob = new Blob([res.data]);
       setLocalForage(
-        item.fileName,
+        item.data.fileName,
         blob,
         () => {
           if (onSuccess) onSuccess(item);

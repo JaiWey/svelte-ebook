@@ -20,7 +20,8 @@
   function confirm() {
     if (showRemove) {
       dispatch("remove");
-    } else {
+    } else if (showDownload) {
+      dispatch("download");
     }
   }
 

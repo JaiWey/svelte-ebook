@@ -1,25 +1,20 @@
 <script>
   import { slide } from "svelte/transition";
+  import { pop, push } from "svelte-spa-router";
   import { showMenu } from "../../stores/ebook";
 </script>
 
 {#if $showMenu}
   <div transition:slide={{ duration: 500 }} class="ebook-header">
     <div class="left">
-      <div class="icon-wrapper">
+      <div class="icon-wrapper" on:click={pop}>
         <span class="icon-back" />
       </div>
     </div>
 
     <div class="right">
-      <div class="icon-wrapper">
+      <div class="icon-wrapper" on:click={() => push("/store/shelf")}>
         <span class="icon-shelf" />
-      </div>
-      <div class="icon-wrapper">
-        <span class="icon-cart" />
-      </div>
-      <div class="icon-wrapper">
-        <span class="icon-more" />
       </div>
     </div>
   </div>

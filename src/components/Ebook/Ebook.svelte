@@ -35,6 +35,7 @@
   import { get } from "svelte/store";
   import EbookBookmark from "./EbookBookmark.svelte";
   import { querystring } from "svelte-spa-router";
+  import { getLocalForage } from "../../utils/localForage";
 
   export let params = {};
   const threshold = rem2px(2.5);
@@ -51,19 +52,42 @@
   onDestroy(() => interval && clearInterval(interval));
 
   onMount(() => {
-    const parsed = qs.parse($querystring);
-    const opf = parsed.opf;
-    initEpub(opf);
+    const urlFile = params.filename;
+    if (urlFile.indexOf("|") > 0) {
+      ebookName.set(urlFile.split("|").join("/"));
+      // 实时下载电子书
+      init(`APP_EPUB_URL/${this.fileName}.epub`);
+    } else {
+      ebookName.set(urlFile);
+      getLocalForage(urlFile, (err, blob) => {
+        if (!err) {
+          if (blob) {
+            // 离线阅读
+            init(blob);
+          } else {
+            // 在线阅读
+            const parsed = qs.parse($querystring);
+            const opf = parsed.opf;
+            if (opf) {
+              init(opf);
+            }
+          }
+        }
+      });
+    }
+  });
+
+  function init(target) {
+    initEpub(target);
     parseBook();
     interval = setInterval(() => {
       const m = $minutes;
       minutes.update((m) => m + 1);
       setStorageMinutes(params.filename, m + 1);
     }, 60 * 1000);
-  });
+  }
 
   function initEpub(target) {
-    ebookName.set(target);
     _ebook = new Epub(target);
     ebook.set(_ebook);
     initRendition(target);

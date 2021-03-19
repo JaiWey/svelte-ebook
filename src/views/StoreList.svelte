@@ -30,7 +30,8 @@
             return {
               title: category,
               data: data.data[category].filter(
-                (book) => book.title.indexOf(keyword) >= 0
+                (book) =>
+                  book.title.toLowerCase().indexOf(keyword.toLowerCase()) >= 0
               ),
             };
           })
