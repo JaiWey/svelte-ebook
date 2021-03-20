@@ -11,12 +11,14 @@ export function setCssThemeVar(name) {
   document.documentElement.style.setProperty("--color2", style.color2);
 }
 
+export function fontSize() {
+  let fontSize = window.innerWidth / 20;
+  return fontSize > 50 ? 50 : fontSize;
+}
 export function px2rem(px) {
-  const size = parseFloat(getComputedStyle(document.documentElement).fontSize);
-  return px / size;
+  return px / fontSize();
 }
 
 export function rem2px(rem) {
-  const size = parseFloat(getComputedStyle(document.documentElement).fontSize);
-  return rem * size;
+  return rem * fontSize();
 }

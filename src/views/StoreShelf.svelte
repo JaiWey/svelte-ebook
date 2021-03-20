@@ -1,7 +1,9 @@
 <script>
   import { onMount } from "svelte";
+  import { _ } from "svelte-i18n/dist/runtime.cjs";
   import { download } from "../api/book";
   import Scroll from "../components/common/Scroll.svelte";
+  import ShelfDownloadToast from "../components/Shelf/ShelfDownloadToast.svelte";
   import ShelfFooter from "../components/Shelf/ShelfFooter.svelte";
   import ShelfList from "../components/Shelf/ShelfList.svelte";
   import ShelfSearch from "../components/Shelf/ShelfSearch.svelte";
@@ -12,6 +14,8 @@
   let isByTime = true;
   let selectedBook = [];
   let searchText = "";
+  let isDownload = false;
+  let downloadTextArray = [];
 
   $: bookList = isByTime
     ? searchFilter($shelfBook, searchText).slice()
@@ -22,6 +26,8 @@
           let nameB = b.type === 1 ? b.data.title : b.title;
           return nameA.localeCompare(nameB);
         });
+
+  $: downloadText = downloadTextArray.join("\n");
 
   onMount(() => {
     initShelfBook();
@@ -110,22 +116,46 @@
   }
 
   function onDownload() {
+    isDownload = true;
     const resultBook = $shelfBook.filter(
       (b) => b.type === 1 && selectedBook.indexOf(b.data.title) >= 0
     );
-    for (const book of resultBook) {
+    for (let i = 0; i < resultBook.length; i++) {
+      const book = resultBook[i];
       download(
         book,
         (book) => {
           console.log("[" + book.data.fileName + "]下载成功...");
+          downloadTextArray[i] = ` ${book.data.fileName} ` + "download Finish";
+          if (
+            downloadTextArray.filter((t) => !t.endsWith("download Finish"))
+              .length === 0
+          ) {
+            isDownload = false;
+            isEdit = false;
+            downloadTextArray = [];
+          }
         },
-        (e) => console.log(e),
-        (e) => console.log(e),
+        (e) => {
+          isDownload = false;
+          isEdit = false;
+          downloadTextArray = [];
+          console.log(e);
+        },
+        (e) => {
+          isDownload = false;
+          isEdit = false;
+          downloadTextArray = [];
+          console.log(e);
+        },
         (progressEvent) => {
           const progress =
             Math.floor((progressEvent.loaded / progressEvent.total) * 100) +
             "%";
           console.log(progress);
+          downloadTextArray[
+            i
+          ] = `Downloading ${book.data.fileName} ${progress}`;
         }
       );
     }
@@ -146,5 +176,8 @@
       on:remove={deleteBook}
       on:download={onDownload}
     />
+  {/if}
+  {#if isDownload}
+    <ShelfDownloadToast content={downloadText} />
   {/if}
 </div>

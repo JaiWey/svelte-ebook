@@ -4,6 +4,7 @@ import { addMessages, init, getLocaleFromNavigator } from "svelte-i18n";
 import en from "../locale/en.json";
 import ch from "../locale/zh.json";
 import { getStorageLocale } from "./utils/storage";
+import { fontSize } from "./utils/utils";
 
 addMessages("en", en);
 addMessages("zh", ch);
@@ -14,8 +15,7 @@ init({
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  let fontSize = window.innerWidth / 20;
-  fontSize = fontSize > 50 ? 50 : fontSize;
+  const size = fontSize();
   const html = document.querySelector("html");
-  html.style.fontSize = fontSize + "px";
+  html.style.fontSize = size + "px";
 });

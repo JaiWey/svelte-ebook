@@ -13,6 +13,8 @@
   import Scroll from "../common/Scroll.svelte";
   import ShelfList from "./ShelfList.svelte";
   import ShelfFooter from "./ShelfFooter.svelte";
+  import ShelfDownloadToast from "./ShelfDownloadToast.svelte";
+  import { download } from "../../api/book";
 
   let isEdit = false;
   let selectedBook = [];
@@ -20,6 +22,8 @@
   let isModifyName = false;
   let category;
   let bookList;
+  let isDownload = false;
+  let downloadTextArray = [];
 
   $: {
     let result = $shelfBook.find((b) => b.type === 2 && b.title === category);
@@ -29,6 +33,7 @@
       bookList = [];
     }
   }
+  $: downloadText = downloadTextArray.join("\n");
 
   onMount(() => {
     initShelfBook();
@@ -39,7 +44,7 @@
   function selected(event) {
     const { isSelected, title } = event.detail;
     if (isSelected) {
-      selectedBook = [...selectedBook, title];
+      selectedBook.push(title);
     } else {
       selectedBook = selectedBook.filter((b) => b === title);
     }
@@ -139,6 +144,54 @@
     selectedBook = [];
     isEdit = false;
   }
+
+  function onDownload() {
+    isDownload = true;
+    const resultBook = $shelfBook
+      .find((b) => b.type === 2 && b.title === category)
+      .bookList.filter(
+        (b) => b.type === 1 && selectedBook.indexOf(b.data.title) >= 0
+      );
+    for (let i = 0; i < resultBook.length; i++) {
+      const book = resultBook[i];
+      download(
+        book,
+        (book) => {
+          console.log("[" + book.data.fileName + "]下载成功...");
+          downloadTextArray[i] = ` ${book.data.fileName} ` + "download Finish";
+          if (
+            downloadTextArray.filter((t) => !t.endsWith("download Finish"))
+              .length === 0
+          ) {
+            isDownload = false;
+            isEdit = false;
+            downloadTextArray = [];
+          }
+        },
+        (e) => {
+          isDownload = false;
+          isEdit = false;
+          downloadTextArray = [];
+          console.log(e);
+        },
+        (e) => {
+          isDownload = false;
+          isEdit = false;
+          downloadTextArray = [];
+          console.log(e);
+        },
+        (progressEvent) => {
+          const progress =
+            Math.floor((progressEvent.loaded / progressEvent.total) * 100) +
+            "%";
+          console.log(progress);
+          downloadTextArray[
+            i
+          ] = `Downloading ${book.data.fileName} ${progress}`;
+        }
+      );
+    }
+  }
 </script>
 
 <div>
@@ -163,6 +216,7 @@
       on:remove={removeBook}
       on:addToGroup={addToGroup}
       on:createNewGroup={createNewGroup}
+      on:download={onDownload}
     />
   {/if}
   {#if isEditGroup}
@@ -175,6 +229,9 @@
   {/if}
   {#if isModifyName}
     <div transition:fade class="center-dialog" />
+  {/if}
+  {#if isDownload}
+    <ShelfDownloadToast content={downloadText} />
   {/if}
 </div>
 

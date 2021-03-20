@@ -19,7 +19,7 @@
       // List of route pre-conditions
       conditions: [
         (detail) => {
-          replace("/store/shelf");
+          replace("/store/home");
           return false;
         },
       ],

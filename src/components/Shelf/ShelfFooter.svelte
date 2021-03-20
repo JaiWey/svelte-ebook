@@ -17,6 +17,24 @@
     showRemove = showDownload = false;
   }
 
+  function onShowMove() {
+    if (selectedBook.length > 0) {
+      showMove = true;
+    }
+  }
+
+  function onShowRemove() {
+    if (selectedBook.length > 0) {
+      showRemoveMove = true;
+    }
+  }
+
+  function onShowDownload() {
+    if (selectedBook.length > 0) {
+      showDownload = true;
+    }
+  }
+
   function confirm() {
     if (showRemove) {
       dispatch("remove");
@@ -40,16 +58,16 @@
   <div
     class="tab-wrapper"
     class:active={(selectedBook.length = 1)}
-    on:click={() => (showDownload = true)}
+    on:click={onShowDownload}
   >
     <span class="icon icon-download" />
     <span class="tab-title">{$_("shelf.download")}</span>
   </div>
-  <div class="tab-wrapper" on:click={() => (showMove = true)}>
+  <div class="tab-wrapper" on:click={onShowMove}>
     <span class="icon icon-move" />
     <span class="tab-title">{$_("shelf.move")}</span>
   </div>
-  <div class="tab-wrapper" on:click={() => (showRemove = true)}>
+  <div class="tab-wrapper" on:click={onShowRemove}>
     <span class="icon icon-shelf" />
     <span class="tab-title">{$_("shelf.remove")}</span>
   </div>

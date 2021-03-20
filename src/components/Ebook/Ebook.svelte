@@ -53,10 +53,11 @@
 
   onMount(() => {
     const urlFile = params.filename;
+    console.log(urlFile);
     if (urlFile.indexOf("|") > 0) {
       ebookName.set(urlFile.split("|").join("/"));
       // 实时下载电子书
-      init(`APP_EPUB_URL/${this.fileName}.epub`);
+      init(`${process.env.APP_EPUB_URL}/${this.fileName}.epub`);
     } else {
       ebookName.set(urlFile);
       getLocalForage(urlFile, (err, blob) => {
@@ -143,10 +144,10 @@
 
   function addFontCss(rendition) {
     rendition.hooks.content.register((contents) => {
-      contents.addStylesheet("APP_RES_URL/fonts/daysOne.css");
-      contents.addStylesheet("APP_RES_URL/fonts/tangerine.css");
-      contents.addStylesheet("APP_RES_URL/fonts/montserrat.css");
-      contents.addStylesheet("APP_RES_URL/fonts/cabin.css");
+      contents.addStylesheet(`${process.env.APP_RES_URL}/fonts/daysOne.css`);
+      contents.addStylesheet(`${process.env.APP_RES_URL}/fonts/tangerine.css`);
+      contents.addStylesheet(`${process.env.APP_RES_URL}/fonts/montserrat.css`);
+      contents.addStylesheet(`${process.env.APP_RES_URL}/fonts/cabin.css`);
     });
   }
 

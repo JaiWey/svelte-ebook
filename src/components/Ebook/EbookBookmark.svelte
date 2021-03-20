@@ -48,8 +48,10 @@
     z-index: -1;
     top: 0;
     right: 1rem;
+    display: none;
     &.mark {
       z-index: 1;
+      display: block;
     }
   }
   .ebook-mark-icon {

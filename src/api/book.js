@@ -5,21 +5,21 @@ import { getCategoryName } from "../utils/constants";
 export function home() {
   return axios({
     method: "get",
-    url: "APP_URL/book/home2",
+    url: `${process.env.APP_URL}/book/home2`,
   });
 }
 
 export function list() {
   return axios({
     method: "get",
-    url: "APP_URL/book/list",
+    url: `${process.env.APP_URL}/book/list`,
   });
 }
 
 export function detail(book) {
   return axios({
     method: "get",
-    url: "APP_URL/book/detail",
+    url: `${process.env.APP_URL}/book/detail`,
     params: {
       fileName: book.fileName,
     },
@@ -29,7 +29,7 @@ export function detail(book) {
 export function download(item, onSuccess, onFailed, onError, onProgress) {
   axios
     .create({
-      baseURL: "APP_EPUB_URL",
+      baseURL: process.env.APP_EPUB_URL,
       method: "get",
       responseType: "blob",
       timeout: 180 * 1000,

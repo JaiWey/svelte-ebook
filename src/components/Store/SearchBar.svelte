@@ -191,5 +191,6 @@
     background: transparent;
     border: none;
     outline: none;
+    font-size: 0.7rem;
   }
 </style>

@@ -59,7 +59,7 @@
           if (rootFile.startsWith("/")) {
             rootFile = rootFile.substring(1, rootFile.length);
           }
-          const url = "APP_EPUB_OPF_URL";
+          const url = process.env.APP_EPUB_OPF_URL;
           opf = `${url}/${fileName}/${rootFile}`;
           parseBook(opf);
         } else {

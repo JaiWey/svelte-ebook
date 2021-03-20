@@ -78,6 +78,8 @@
     "private": "Private",
     "noPrivate": "Close Private",
     "download": "Download",
+    "downloading": "Downloading",
+    "downloadFinish": "download finish",
     "move": "Move...",
     "remove": "Remove",
     "setPrivateTitle": "When opened, the reading history of selected books will not be made public",

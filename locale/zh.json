@@ -78,6 +78,8 @@
     "private": "私密阅读",
     "noPrivate": "关闭私密阅读",
     "download": "开启离线",
+    "downloading": "正在下载",
+    "downloadFinish": "完成下载",
     "move": "移动到...",
     "remove": "移出书架",
     "setPrivateTitle": "开启后，所选书籍的阅读记录将不会对外公开",
